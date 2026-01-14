@@ -1,0 +1,11 @@
+1.live
+2
+3.
+
+
+BudgetingApp Concepts
+    -Set a Budget
+    -See Expenses monthly
+    -break expenses into sections
+    -make a visual chart of Expenses with pandas
+    -Allow for conversion of currencies

@@ -86,3 +86,5 @@ with open("Expenses.csv", "a") as file:
 #MAIN LOOP (IMPORTANT!!!!!!!)
 #main.mainloop()
 
+
+

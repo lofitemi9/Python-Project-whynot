@@ -1,90 +1,70 @@
-# from tkinter import*
-# import tkinter
+print("""
+1. View Categories
+2. Add Category
+3. Delete Category
+4. Exit
+""")
 
-# root = Tk(screenName=None, baseName=None, className='App', useTk=1)
-# #Main loop (IMPORTANT)
-# main = tkinter.Tk()
-
-# -------------------------------------------------------------------
-# menu for the budgeting app
-print('''
-      
-      1. View Categories
-      2. Add Category
-      3. Delete Category
-      4. Exit
-      
-      ''')
-# -------------------------------------------------------------------
-# creating an empty list to hold all the categories
 categories = []
 
-#prompting the user to select a choice on the menu
-choice = int(input("Pick a Number 1 - 4: \n"))
+try:
+    choice = int(input("Pick a Number 1 - 4: "))
+except:
+    print("Invalid input")
+    exit()
 
-
-def addCategory():#It adds a Category that the user wants
-    works = True
-    while works:
-        newCategory = input("What do you want to add ?: ")
+def addCategory():
+    while True:
+        newCategory = input("What do you want to add?: ")
         categories.append(newCategory)
-        more = input("Do you wanna add more (y/n)")
-        if more == 'n': 
-            works = False
+        more = input("Add more? (y/n): ")
+        if more.lower() == "n":
+            break
 
-        print(categories)
-    
-def viewCategories(): #So like lists out the categories
-    print("These are your Categories: ")
-    with open("Expenses.csv", "r") as file:
-        for line in file:
-            category = line.strip().split(',')
-            if category != "":
-                print(category)
-            
+def viewCategories():
+    print("These are your Categories:")
+    try:
+        with open("Expenses.csv", "r") as file:
+            for line in file:
+                cats = [c.strip() for c in line.split(",") if c.strip()]
+                for c in cats:
+                    print("-", c)
+    except FileNotFoundError:
+        print("No categories yet.")
 
-def delCategory():#deletes a category
-    print("Select a category to delete: ")
-    for category in categories:
-        print(category)
-
+def delCategory():
+    delCat = input("Select a category to delete: ").lower()
+    try:
+        with open("Expenses.csv", "r") as file:
+            content = file.read()
+        cats = [c.strip() for c in content.split(",") if c.strip()]
+        if delCat not in [c.lower() for c in cats]:
+            print("That category doesn't exist.")
+            return
+        if input("Delete? (y/n): ") == "y":
+            cats = [c for c in cats if c.lower() != delCat]
+            with open("Expenses.csv", "w") as file:
+                file.write(",".join(cats))
+            print("Deleted.")
+    except FileNotFoundError:
+        print("No file found.")
 
 match choice:
     case 1: viewCategories()
     case 2: addCategory()
     case 3: delCategory()
-    case 4: exit
-    
+    case 4: exit()
 
+if categories:
+    try:
+        with open("Expenses.csv", "r") as file:
+            existing = file.read()
+            existing = [c.strip() for c in existing.split(",") if c.strip()]
+    except FileNotFoundError:
+        existing = []
 
-#Creating and saving user category
-with open("Expenses.csv", "a") as file:
-    for category in categories:  #Logic for the category names, so that we can see them
-        file.write(f", {category} ")
+    all_categories = existing + categories
 
-        if(category != categories[-1]):
-            file.write(f",")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#MAIN LOOP (IMPORTANT!!!!!!!)
-#main.mainloop()
-
-
+    with open("Expenses.csv", "w") as file:
+        file.write(",".join(all_categories))
 
